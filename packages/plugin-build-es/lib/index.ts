@@ -4,14 +4,20 @@ import glob from "glob";
 import path from "path";
 import ms from "pretty-ms";
 
-import { asRollupPlugin, Config, SiuRollupBuilder, stopService, TOutputFormatKey } from "@siujs/cmd-build";
-import { HookHandlerContext, HookHandlerNext, plugin } from "@siujs/core";
+import { asRollupPlugin, Config, SiuRollupBuilder, stopService, TOutputFormatKey } from "@siujs/builtin-build";
+import { CommandOptionsHandlerParams, HookHandlerContext, HookHandlerNext, plugin } from "@siujs/core";
 
 const plug = plugin({
 	build: {
 		sourceDir: "lib",
 		destDir: "es"
 	}
+});
+
+plug.build.initCmdOpts((cmd: CommandOptionsHandlerParams) => {
+	cmd
+		.option("-s, --source-dir <sourceDir>", "Source directory")
+		.option("-d, --dest-dir <destDir>", "Builded destination directory", "es");
 });
 
 plug.build.start(async (ctx: HookHandlerContext, next: HookHandlerNext) => {
@@ -69,7 +75,17 @@ plug.build.process(async (ctx: HookHandlerContext, next: HookHandlerNext) => {
 				.set("file", void 0)
 				.end()
 				.plugin("esbuild")
-				.use(asRollupPlugin(), [{ sourcemap: true, loaders: { ".js": "js", ".ts": "ts" } }]);
+				.use(asRollupPlugin(), [
+					{
+						sourcemap: true,
+						loaders: {
+							".js": "js",
+							".mjs": "js",
+							".cjs": "js",
+							".ts": "ts"
+						}
+					}
+				]);
 		}
 	});
 
