@@ -13,6 +13,10 @@ export default (api: PluginApi) => {
 	api.create.complete(onCreationComplete);
 	api.create.error(onCreationError);
 
+	api.build.cli((option: CLIOptionHandlerParams) => {
+		option("-D, --no-dts", "Whether not build defineTypes file");
+	});
+
 	api.build.start(onBuildStart);
 	api.build.process(onBuildProc);
 	api.build.complete(onBuildComplete);
