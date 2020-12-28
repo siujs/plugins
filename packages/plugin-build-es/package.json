@@ -1,41 +1,45 @@
 {
-  "name": "@siujs/plugin-build-es",
-  "version": "0.0.0",
-  "description": "Support tree-shaking es package, optimize package size",
-  "keywords": [
-    "es",
-    "import",
-    "build",
-    "siujs"
-  ],
-  "author": "buns <kuafujs@126.com>",
-  "homepage": "https://github.com/siujs/siu",
-  "license": "MIT",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/siujs/siu.git"
-  },
-  "bugs": {
-    "url": "https://github.com/siujs/siu/issues"
-  },
-  "dependencies": {
-    "@siujs/core": "0.0.0-alpha.0",
-    "@siujs/builtin-build": "0.0.0-alpha.0",
-    "chalk": "^4.1.0",
-    "fs-extra": "^9.0.1",
-    "glob": "^7.1.6",
-    "pretty-ms": "^7.0.1"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.5"
-  }
+	"name": "@siujs/plugin-build-es",
+	"version": "0.0.0",
+	"description": "Support tree-shaking es package, optimize package size",
+	"keywords": [
+		"es",
+		"import",
+		"build",
+		"siujs"
+	],
+	"author": "buns <kuafujs@126.com>",
+	"homepage": "https://github.com/siujs/plugins",
+	"license": "MIT",
+	"main": "dist/index.cjs",
+	"module": "dist/index.mjs",
+	"directories": {
+		"lib": "lib",
+		"test": "__tests__"
+	},
+	"files": [
+		"dist"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/siujs/plugins.git"
+	},
+	"bugs": {
+		"url": "https://github.com/siujs/plugins/issues"
+	},
+	"peerDependencies": {
+		"@siujs/core": "*",
+		"@siujs/builtin-build": "*"
+	},
+	"dependencies": {
+		"@siujs/core": "1.0.0-beta.3",
+		"@siujs/builtin-build": "1.0.0-beta.3",
+		"chalk": "^4.1.0",
+		"fs-extra": "^9.0.1",
+		"glob": "^7.1.6",
+		"pretty-ms": "^7.0.1"
+	},
+	"devDependencies": {
+		"@types/fs-extra": "^9.0.6"
+	}
 }
