@@ -1,17 +1,21 @@
-import { plugin } from "@siujs/core";
+import { CLIOptionHandlerParams, PluginApi } from "@siujs/core";
 
 import { onBuildClean, onBuildComplete, onBuildError, onBuildProc, onBuildStart } from "./build";
-import { onCreationComplete, onCreationError, onCreationProc, onCreationStart } from "./creation";
+import { onCreationComplete, onCreationError, onCreationProc, onCreationStart } from "./create";
 
-const plug = plugin({});
+export default (api: PluginApi) => {
+	api.create.cli((option: CLIOptionHandlerParams) => {
+		option("-I, --no-install", "You do not want run npm/yarn install");
+	});
 
-plug.creation.start(onCreationStart);
-plug.creation.process(onCreationProc);
-plug.creation.complete(onCreationComplete);
-plug.creation.error(onCreationError);
+	api.create.start(onCreationStart);
+	api.create.process(onCreationProc);
+	api.create.complete(onCreationComplete);
+	api.create.error(onCreationError);
 
-plug.build.start(onBuildStart);
-plug.build.process(onBuildProc);
-plug.build.complete(onBuildComplete);
-plug.build.error(onBuildError);
-plug.build.clean(onBuildClean);
+	api.build.start(onBuildStart);
+	api.build.process(onBuildProc);
+	api.build.complete(onBuildComplete);
+	api.build.error(onBuildError);
+	api.build.clean(onBuildClean);
+};

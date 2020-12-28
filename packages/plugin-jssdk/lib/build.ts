@@ -10,13 +10,13 @@ import {
 	SiuRollupBuilder,
 	stopService,
 	TOutputFormatKey
-} from "@siujs/cmd-build";
+} from "@siujs/builtin-build";
 import { HookHandlerContext, HookHandlerNext } from "@siujs/core";
 
 type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | Promise<void>;
 
 export async function onBuildStart(ctx: HookHandlerContext, next: HookHandlerNext) {
-	ctx.keys("startTime", Date.now());
+	ctx.scopedKeys("startTime", Date.now());
 
 	await fs.remove(path.resolve(ctx.pkg().path, "./dist"));
 
@@ -35,6 +35,8 @@ export async function onBuildProc(ctx: HookHandlerContext, next: HookHandlerNext
 					sourcemap: true,
 					loaders: {
 						".js": "js",
+						".mjs": "js",
+						".cjs": "js",
 						".ts": "ts"
 					}
 				}
@@ -57,16 +59,24 @@ export async function onBuildProc(ctx: HookHandlerContext, next: HookHandlerNext
 			await next(ex);
 		}
 	});
+
 	await builder.build();
+
 	console.log();
-	await generateDTSWithTSC(pkgData);
+
+	const needDTS = ctx.opts<boolean>("dts");
+
+	needDTS && (await generateDTSWithTSC(pkgData));
+
 	await next();
 }
 
 export async function onBuildComplete(ctx: HookHandlerContext) {
 	console.log(
 		chalk.green(
-			`\n✔ Builded ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(ms(Date.now() - ctx.keys<number>("startTime")))}!`
+			`\n✔ Builded ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(
+				ms(Date.now() - ctx.scopedKeys<number>("startTime"))
+			)}!`
 		)
 	);
 }

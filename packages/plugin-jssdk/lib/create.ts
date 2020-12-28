@@ -4,13 +4,13 @@ import path from "path";
 import ms from "pretty-ms";
 import shell from "shelljs";
 
-import { getPkgDirName, HookHandlerContext, HookHandlerNext } from "@siujs/core";
-import { downloadGit, startSpinner } from "@siujs/utils";
+import { HookHandlerContext, HookHandlerNext } from "@siujs/core";
+import { downloadGit, getPkgDirName, startSpinner } from "@siujs/utils";
 
 export async function onCreationStart(ctx: HookHandlerContext, next: HookHandlerNext) {
-	ctx.keys("startTime", Date.now());
+	ctx.scopedKeys("startTime", Date.now());
 
-	ctx.keys("spinner", startSpinner(chalk.greenBright(`Creating \`${chalk.bold(ctx.pkg().name)}\` package... `)));
+	ctx.scopedKeys("spinner", startSpinner(chalk.greenBright(`Creating \`${chalk.bold(ctx.pkg().name)}\` package... `)));
 
 	await next();
 }
@@ -18,7 +18,7 @@ export async function onCreationStart(ctx: HookHandlerContext, next: HookHandler
 export async function onCreationProc(ctx: HookHandlerContext, next: HookHandlerNext) {
 	const pkgData = ctx.pkg();
 
-	await downloadGit("https://github.com/siujs/tpls", "jssdk.pkg", pkgData.path);
+	await downloadGit("https://gitee.com/siujs/tpls", "jssdk.pkg", pkgData.path);
 
 	/**
 	 * replace placeholder chars
@@ -71,7 +71,7 @@ export async function onCreationProc(ctx: HookHandlerContext, next: HookHandlerN
 		}
 	}
 
-	ctx.keys<any>("spinner").stop(true);
+	ctx.scopedKeys<any>("spinner").stop(true);
 
 	shell.exec("yarn");
 
@@ -81,13 +81,15 @@ export async function onCreationProc(ctx: HookHandlerContext, next: HookHandlerN
 export async function onCreationComplete(ctx: HookHandlerContext) {
 	console.log(
 		chalk.green(
-			`\n✔ Created ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(ms(Date.now() - ctx.keys<number>("startTime")))}!`
+			`\n✔ Created ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(
+				ms(Date.now() - ctx.scopedKeys<number>("startTime"))
+			)}!`
 		)
 	);
 }
 
 export async function onCreationError(ctx: HookHandlerContext) {
-	ctx.keys<any>("spinner").stop(true);
+	ctx.scopedKeys<any>("spinner").stop(true);
 	shell.rm("-rf", ctx.pkg().path);
 	console.log(chalk.redBright(ctx.ex()));
 }
