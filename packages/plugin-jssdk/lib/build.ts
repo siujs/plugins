@@ -30,17 +30,7 @@ export async function onBuildProc(ctx: HookHandlerContext, next: HookHandlerNext
 
 	const builder = new SiuRollupBuilder(pkgData, {
 		async onConfigTransform(config: Config, format: TOutputFormatKey) {
-			config.plugin("esbuild").use(asRollupPlugin(), [
-				{
-					sourcemap: true,
-					loaders: {
-						".js": "js",
-						".mjs": "js",
-						".cjs": "js",
-						".ts": "ts"
-					}
-				}
-			]);
+			config.plugin("esbuild").use(asRollupPlugin(), [{ sourcemap: true }]);
 
 			config.plugin("babel").use(require("rollup-plugin-babel"), [
 				{
