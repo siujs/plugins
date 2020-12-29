@@ -50,7 +50,11 @@ export async function onBuildProc(ctx: HookHandlerContext, next: HookHandlerNext
 		}
 	});
 
-	await builder.build();
+	const format = ctx.opts<string>("format");
+
+	await builder.build({
+		[`allowFormats`]: format && (format.split(",") as TOutputFormatKey[])
+	});
 
 	console.log();
 
