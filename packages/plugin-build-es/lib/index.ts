@@ -7,6 +7,8 @@ import ms from "pretty-ms";
 import { asRollupPlugin, Config, SiuRollupBuilder, stopService, TOutputFormatKey } from "@siujs/builtin-build";
 import { CLIOptionHandlerParams, HookHandlerContext, HookHandlerNext, PluginApi } from "@siujs/core";
 
+type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | Promise<void>;
+
 export default (api: PluginApi) => {
 	api.build.cli((option: CLIOptionHandlerParams) => {
 		option("-s, --source-dir <sourceDir>", "Source directory", "lib");
@@ -37,6 +39,8 @@ export default (api: PluginApi) => {
 
 		const destESDir = path.resolve(pkgData.path, ctx.opts<string>("destDir") || "es");
 
+		const customTransform = ctx.opts<TransformConfigHook>("transformConfig");
+
 		const bablePluginImportBuilder = new SiuRollupBuilder(pkgData, {
 			onEachBuildStart(config: Config) {
 				const outputs = config.toOutput();
@@ -51,7 +55,7 @@ export default (api: PluginApi) => {
 					)
 				);
 			},
-			onConfigTransform(config: Config, format: TOutputFormatKey) {
+			async onConfigTransform(config: Config, format: TOutputFormatKey) {
 				if (format !== "es") return;
 
 				const sourceESDirFiles = glob.sync("**/*.ts", { cwd: sourceESDirPath }).reduce((prev, cur) => {
@@ -68,7 +72,11 @@ export default (api: PluginApi) => {
 					.delete("file")
 					.end()
 					.plugin("esbuild")
-					.use(asRollupPlugin(), [{ sourcemap: true }]);
+					.use(asRollupPlugin());
+
+				if (customTransform) {
+					await customTransform(config, format);
+				}
 			}
 		});
 
