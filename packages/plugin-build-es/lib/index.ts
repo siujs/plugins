@@ -68,17 +68,7 @@ export default (api: PluginApi) => {
 					.delete("file")
 					.end()
 					.plugin("esbuild")
-					.use(asRollupPlugin(), [
-						{
-							sourcemap: true,
-							loaders: {
-								".js": "js",
-								".mjs": "js",
-								".cjs": "js",
-								".ts": "ts"
-							}
-						}
-					]);
+					.use(asRollupPlugin(), [{ sourcemap: true }]);
 			}
 		});
 
