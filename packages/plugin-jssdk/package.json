@@ -35,9 +35,9 @@
 		"@siujs/utils": "*"
 	},
 	"dependencies": {
-		"@siujs/core": "1.0.0-beta.3",
-		"@siujs/builtin-build": "1.0.0-beta.3",
-		"@siujs/utils": "1.0.0-beta.3",
+		"@siujs/core": "^1.0.0-beta.4",
+		"@siujs/builtin-build": "^1.0.0-beta.4",
+		"@siujs/utils": "^1.0.0-beta.4",
 		"chalk": "^4.1.0",
 		"fs-extra": "^9.0.1",
 		"pretty-ms": "^7.0.1",
