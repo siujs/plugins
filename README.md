@@ -1,11 +1,12 @@
-# siu-cli
+# Siu Plugins
 
-#### Introduction
-An cli tool to help you a little easier and faster, sounds like football moving: `siu...`
+🍣 官方插件集装箱
 
-TODO:
+该存储库中包含对于`Siu`组织已采用的维护插件以及推荐给用户的插件。
 
-* [ ] Scaffold of `node-lib`
+## 插件列表
 
-* [ ] Scaffold of `vmfe`
-
+| 名称                                               | 说明                                                                                             |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [@siujs/plugin-build-es](packages/plugin-build-es) | 将包内指定目录的文件转成对应的`es`模块文件，便于在项目使用时的摇树优化                           |
+| [@siujs/plugin-jssdk](packages/jssdk)              | 专门针对`jssdk`这样类型的类库项目(可参考实际项目[jsbridge](https://github.com/kuafujs/jsbridge)) |
