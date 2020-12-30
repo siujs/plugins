@@ -5,7 +5,7 @@ import path from "path";
 import ms from "pretty-ms";
 
 import { asRollupPlugin, Config, SiuRollupBuilder, stopService, TOutputFormatKey } from "@siujs/builtin-build";
-import { CLIOptionHandlerParams, HookHandlerContext, HookHandlerNext, PluginApi } from "@siujs/core";
+import { CLIOptionHandlerParams, HookHandlerContext, PluginApi } from "@siujs/core";
 
 type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | Promise<void>;
 
@@ -15,12 +15,11 @@ export default (api: PluginApi) => {
 		option("-d, --dest-dir <destDir>", "Builded destination directory", "es");
 	});
 
-	api.build.start(async (ctx: HookHandlerContext, next: HookHandlerNext) => {
+	api.build.start(async (ctx: HookHandlerContext) => {
 		const sourceDir = ctx.opts<string>("sourceDir");
 
 		if (!sourceDir) {
-			await next(new Error(`ERROR: 'sourceDir' options can't be emtpy!`));
-			return;
+			throw new Error(`ERROR: 'sourceDir' options can't be emtpy!`);
 		}
 
 		const destDir = ctx.opts<string>("destDir") || "es";
@@ -28,11 +27,9 @@ export default (api: PluginApi) => {
 		ctx.scopedKeys("startTime", Date.now());
 
 		await fs.remove(path.resolve(ctx.pkg().path, destDir));
-
-		await next();
 	});
 
-	api.build.process(async (ctx: HookHandlerContext, next: HookHandlerNext) => {
+	api.build.process(async (ctx: HookHandlerContext) => {
 		const pkgData = ctx.pkg();
 
 		const sourceESDirPath = path.resolve(pkgData.path, ctx.opts<string>("sourceDir"));
@@ -84,8 +81,6 @@ export default (api: PluginApi) => {
 			allowFormats: ["es"],
 			sizeCalc: false
 		});
-
-		await next();
 	});
 
 	api.build.complete((ctx: HookHandlerContext) => {
