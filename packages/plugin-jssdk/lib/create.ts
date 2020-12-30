@@ -4,18 +4,16 @@ import path from "path";
 import ms from "pretty-ms";
 import shell from "shelljs";
 
-import { HookHandlerContext, HookHandlerNext } from "@siujs/core";
+import { HookHandlerContext } from "@siujs/core";
 import { downloadGit, getPkgDirName, startSpinner } from "@siujs/utils";
 
-export async function onCreationStart(ctx: HookHandlerContext, next: HookHandlerNext) {
+export async function onCreationStart(ctx: HookHandlerContext) {
 	ctx.scopedKeys("startTime", Date.now());
 
 	ctx.scopedKeys("spinner", startSpinner(chalk.greenBright(`Creating \`${chalk.bold(ctx.pkg().name)}\` package... `)));
-
-	await next();
 }
 
-export async function onCreationProc(ctx: HookHandlerContext, next: HookHandlerNext) {
+export async function onCreationProc(ctx: HookHandlerContext) {
 	const pkgData = ctx.pkg();
 
 	await downloadGit("https://gitee.com/siujs/tpls", "jssdk.pkg", pkgData.path);
@@ -74,8 +72,6 @@ export async function onCreationProc(ctx: HookHandlerContext, next: HookHandlerN
 	ctx.scopedKeys<any>("spinner").stop(true);
 
 	shell.exec("yarn");
-
-	await next();
 }
 
 export async function onCreationComplete(ctx: HookHandlerContext) {

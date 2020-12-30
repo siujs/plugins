@@ -11,19 +11,17 @@ import {
 	stopService,
 	TOutputFormatKey
 } from "@siujs/builtin-build";
-import { HookHandlerContext, HookHandlerNext } from "@siujs/core";
+import { HookHandlerContext } from "@siujs/core";
 
 type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | Promise<void>;
 
-export async function onBuildStart(ctx: HookHandlerContext, next: HookHandlerNext) {
+export async function onBuildStart(ctx: HookHandlerContext) {
 	ctx.scopedKeys("startTime", Date.now());
 
 	await fs.remove(path.resolve(ctx.pkg().path, "./dist"));
-
-	await next();
 }
 
-export async function onBuildProc(ctx: HookHandlerContext, next: HookHandlerNext) {
+export async function onBuildProc(ctx: HookHandlerContext) {
 	const customTransform = ctx.opts<TransformConfigHook>("transformConfig");
 
 	const pkgData = ctx.pkg();
@@ -45,24 +43,24 @@ export async function onBuildProc(ctx: HookHandlerContext, next: HookHandlerNext
 				await customTransform(config, format);
 			}
 		},
-		async onBuildError(ex: Error) {
-			await next(ex);
+		onBuildError(ex: Error) {
+			throw ex;
 		}
 	});
 
 	const format = ctx.opts<string>("format");
 
-	await builder.build({
-		[`allowFormats`]: format && (format.split(",") as TOutputFormatKey[])
-	});
+	await builder.build(
+		format && {
+			allowFormats: format.split(",") as TOutputFormatKey[]
+		}
+	);
 
 	console.log();
 
 	const needDTS = ctx.opts<boolean>("dts");
 
 	needDTS && (await generateDTSWithTSC(pkgData));
-
-	await next();
 }
 
 export async function onBuildComplete(ctx: HookHandlerContext) {
