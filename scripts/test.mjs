@@ -12,8 +12,8 @@ if (process.argv.length >= 2) {
 			? "*"
 			: mdus
 					.split(",")
-					.filter(p => pkgDirs.includes(p))
+					.filter(p => pkgDirs.includes("plugin-" + p))
 					.join(",");
 }
 
-execSync(`cross-env UT_MDU=${specifiedPkgNames} jest --coverage --color=always`);
+execSync(`cross-env UT_MDU=${specifiedPkgNames.replace(/^\s*|\s*$/, "")} jest --coverage --color=always`);

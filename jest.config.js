@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const fs = require("fs");
 
@@ -16,7 +17,7 @@ const moduleNameMapper = fs
 		return prev;
 	}, {});
 
-const utMdus = (process.env.UT_MDU || "*").split(",");
+const utMdus = (process.env.UT_MDU || "*").split(",").map(it => "plugin-" + it);
 
 module.exports = {
 	rootDir,
