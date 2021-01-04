@@ -30,18 +30,18 @@
 		"url": "https://github.com/siujs/plugins/issues"
 	},
 	"peerDependencies": {
-		"@siujs/core": "*",
 		"@siujs/builtin-build": "*",
+		"@siujs/core": "*",
 		"@siujs/utils": "*"
 	},
 	"dependencies": {
-		"@siujs/core": "^1.0.0-beta.4",
-		"@siujs/builtin-build": "^1.0.0-beta.4",
-		"@siujs/utils": "^1.0.0-beta.4",
+		"@rollup/plugin-babel": "^5.2.2",
+		"@siujs/builtin-build": "^1.0.0-beta.6",
+		"@siujs/core": "^1.0.0-beta.6",
+		"@siujs/utils": "^1.0.0-beta.6",
 		"chalk": "^4.1.0",
 		"fs-extra": "^9.0.1",
 		"pretty-ms": "^7.0.1",
-		"rollup-plugin-babel": "^4.4.0",
 		"shelljs": "^0.8.4"
 	},
 	"devDependencies": {

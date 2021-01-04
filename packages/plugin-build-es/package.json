@@ -32,8 +32,8 @@
 		"@siujs/builtin-build": "*"
 	},
 	"dependencies": {
-		"@siujs/core": "^1.0.0-beta.4",
-		"@siujs/builtin-build": "^1.0.0-beta.4",
+		"@siujs/core": "^1.0.0-beta.6",
+		"@siujs/builtin-build": "^1.0.0-beta.6",
 		"chalk": "^4.1.0",
 		"fs-extra": "^9.0.1",
 		"glob": "^7.1.6",
