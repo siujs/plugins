@@ -11,17 +11,11 @@ type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | 
 
 export default (api: PluginApi) => {
 	api.build.cli((option: CLIOptionHandlerParams) => {
-		option("-s, --source-dir <sourceDir>", "Source directory", "lib");
-		option("-d, --dest-dir <destDir>", "Builded destination directory", "es");
+		option("-s, --source-dir [sourceDir]", "Source directory", "lib");
+		option("-d, --dest-dir [destDir]", "Builded destination directory", "es");
 	});
 
 	api.build.start(async (ctx: HookHandlerContext) => {
-		const sourceDir = ctx.opts<string>("sourceDir");
-
-		if (!sourceDir) {
-			throw new Error(`ERROR: 'sourceDir' options can't be emtpy!`);
-		}
-
 		const destDir = ctx.opts<string>("destDir") || "es";
 
 		ctx.scopedKeys("startTime", Date.now());
@@ -32,7 +26,7 @@ export default (api: PluginApi) => {
 	api.build.process(async (ctx: HookHandlerContext) => {
 		const pkgData = ctx.pkg();
 
-		const sourceESDirPath = path.resolve(pkgData.path, ctx.opts<string>("sourceDir"));
+		const sourceESDirPath = path.resolve(pkgData.path, ctx.opts<string>("sourceDir") || "lib");
 
 		const destESDir = path.resolve(pkgData.path, ctx.opts<string>("destDir") || "es");
 
