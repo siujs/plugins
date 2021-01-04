@@ -30,11 +30,12 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 		async onConfigTransform(config: Config, format: TOutputFormatKey) {
 			config.plugin("esbuild").use(asRollupPlugin(), [{ sourcemap: true }]);
 
-			config.plugin("babel").use(require("rollup-plugin-babel"), [
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
+			config.plugin("babel").use(require("@rollup/plugin-babel"), [
 				{
 					extensions: [".mjs", ".cjs", ".js", ".es", ".es6"],
 					include: ["packages/**/*"],
-					// 自定会去读取目标项目的.babelrc文件配置
+					// 自动读取目标项目的.babelrc文件配置
 					root: pkgData.root
 				}
 			]);
