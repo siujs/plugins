@@ -5,7 +5,7 @@ import ms from "pretty-ms";
 import shell from "shelljs";
 
 import { HookHandlerContext } from "@siujs/core";
-import { downloadGit, getPkgDirName, startSpinner } from "@siujs/utils";
+import { downloadGit, startSpinner } from "@siujs/utils";
 
 export async function onCreationStart(ctx: HookHandlerContext) {
 	ctx.scopedKeys("startTime", Date.now());
@@ -41,22 +41,14 @@ export async function onCreationProc(ctx: HookHandlerContext) {
 	const deps = ctx.opts<string>("deps");
 
 	if (deps) {
-		const depsArr = [] as { name: string; isDev: boolean }[];
+		const depsArr = deps.split(",").filter(dep => fs.pathExistsSync(path.resolve(pkgData.pkgsRoot, dep)));
 
-		if (deps) {
-			depsArr.push(...deps.split(",").map(dep => ({ name: dep, isDev: false })));
-		}
-
-		if (deps.length) {
-			const depMetas = await Promise.all(
-				depsArr.map(dep => fs.readJSON(path.resolve(pkgData.pkgsRoot, getPkgDirName(dep.name), "package.json")))
-			);
-
+		if (depsArr.length) {
 			const pkgMeta = await fs.readJSON(pkgData.metaPath);
 
 			if (pkgMeta) {
-				depMetas.forEach((depMeta, index) => {
-					pkgMeta[depsArr[index].isDev ? "devDependencies" : "dependencies"][depMeta.name] = depMeta.version;
+				depsArr.forEach(dep => {
+					(pkgMeta.dependencies || (pkgMeta.dependencies = {}))[dep] = `file:../${dep}`;
 				});
 
 				await Promise.all([
@@ -71,7 +63,9 @@ export async function onCreationProc(ctx: HookHandlerContext) {
 
 	ctx.scopedKeys<any>("spinner").stop(true);
 
-	shell.exec("yarn");
+	if (ctx.opts<boolean>("install")) {
+		shell.exec("yarn");
+	}
 }
 
 export async function onCreationComplete(ctx: HookHandlerContext) {
@@ -85,7 +79,7 @@ export async function onCreationComplete(ctx: HookHandlerContext) {
 }
 
 export async function onCreationError(ctx: HookHandlerContext) {
-	ctx.scopedKeys<any>("spinner").stop(true);
+	ctx.scopedKeys<any>("spinner")?.stop(true);
 	shell.rm("-rf", ctx.pkg().path);
 	console.log(chalk.redBright(ctx.ex()));
 }
