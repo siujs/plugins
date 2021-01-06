@@ -28,10 +28,12 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 
 	const builder = new SiuRollupBuilder(pkgData, {
 		async onConfigTransform(config: Config, format: TOutputFormatKey) {
-			config.plugin("esbuild").use(asRollupPlugin(), [{ sourcemap: true }]);
+			config.plugin("esbuild").use(asRollupPlugin());
 
 			// eslint-disable-next-line @typescript-eslint/no-var-requires
-			config.plugin("babel").use(require("@rollup/plugin-babel"), [
+			const babelPlugin = require("@rollup/plugin-babel");
+
+			config.plugin("babel").use(babelPlugin.default || babelPlugin, [
 				{
 					extensions: [".mjs", ".cjs", ".js", ".es", ".es6"],
 					include: ["packages/**/*"],
@@ -39,6 +41,10 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 					root: pkgData.root
 				}
 			]);
+
+			config.treeshake({
+				moduleSideEffects: true
+			});
 
 			if (customTransform) {
 				await customTransform(config, format);
@@ -59,9 +65,8 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 
 	console.log();
 
-	const needDTS = ctx.opts<boolean>("dts");
-
-	needDTS && (await generateDTSWithTSC(pkgData));
+	/* istanbul ignore next */
+	ctx.opts<boolean>("dts") && (await generateDTSWithTSC(pkgData));
 }
 
 export async function onBuildComplete(ctx: HookHandlerContext) {
