@@ -1,14 +1,19 @@
 import { Option } from "commander";
 import fs from "fs";
 import path from "path";
+import sh from "shelljs";
 
-import { loadPlugins } from "@siujs/core";
+import { loadPlugins, testPlugin } from "@siujs/core";
 
 import fallbackApi from "../lib/index";
 
 type PromiseResolvedResult<T> = T extends (...args: any[]) => Promise<infer P> ? P : never;
 
 let siuPluginCore: PromiseResolvedResult<typeof loadPlugins>;
+
+const packagesRoot = path.resolve(__dirname, "./packages");
+
+jest.mock("console");
 
 beforeAll(async done => {
 	siuPluginCore = await loadPlugins(fallbackApi);
@@ -18,9 +23,13 @@ beforeAll(async done => {
 	fs.writeFileSync(
 		path.resolve(__dirname, "package.json"),
 		`{
-		"name": "vui.spec"
+		"name": "vui.spec",
+		"siu":{}
 	}`
 	);
+
+	sh.mkdir(packagesRoot);
+	sh.mkdir(path.resolve(packagesRoot, "test"));
 
 	done();
 });
@@ -49,10 +58,67 @@ test(" cli options ", async done => {
 	done();
 });
 
-test(" build package ", async done => {
+test(" build.start ", async done => {
+	const ctx = await testPlugin("build", "start", "test");
+
+	expect(!!ctx.scopedKeys("startTime")).toBe(true);
+
+	done();
+});
+
+test(" build.process ", async done => {
+	const pkgRoot = path.resolve(packagesRoot, "test");
+
+	sh.mkdir(path.resolve(pkgRoot, "lib"));
+
+	fs.writeFileSync(
+		path.resolve(pkgRoot, "lib/index.ts"),
+		`import {a} from "../lib2"; 
+	export const c = "a"+a;
+	`
+	);
+
+	sh.mkdir(path.resolve(pkgRoot, "lib2"));
+	fs.writeFileSync(
+		path.resolve(pkgRoot, "lib2/index.ts"),
+		`
+	export const a = "c";
+	`
+	);
+
+	await testPlugin("build", "process", "test");
+
+	await testPlugin("build", "error");
+
+	await testPlugin("build", "clean");
+
+	const file = path.resolve(pkgRoot, "es/index.js");
+
+	expect(fs.existsSync(file)).toBe(true);
+
+	expect(fs.readFileSync(file).toString()).toBe(`const a = "c";
+
+const c = "a" + a;
+
+export { c };
+`);
+
+	done();
+});
+
+test(" build.complete ", async done => {
+	const spy = jest.spyOn(console, "log").mockImplementation();
+
+	await testPlugin("build", "complete", "test");
+
+	expect(spy).toHaveBeenCalledTimes(1);
+
+	spy.mockRestore();
+
 	done();
 });
 
 afterAll(() => {
 	fs.unlinkSync(path.resolve(__dirname, "package.json"));
+	sh.rm("-rf", packagesRoot);
 });
