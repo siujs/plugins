@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import sh from "shelljs";
 
-import { loadPlugins } from "@siujs/core";
+import { loadPlugins, testPlugin } from "@siujs/core";
 
 import fallbackApi from "../lib/index";
 
@@ -13,6 +13,8 @@ let siuPluginCore: PromiseResolvedResult<typeof loadPlugins>;
 
 const packagesRoot = path.resolve(__dirname, "./packages");
 
+jest.mock("console");
+
 beforeAll(async done => {
 	siuPluginCore = await loadPlugins(fallbackApi);
 
@@ -21,11 +23,13 @@ beforeAll(async done => {
 	fs.writeFileSync(
 		path.resolve(__dirname, "package.json"),
 		`{
-		"name": "vui.spec"
+		"name": "vui.spec",
+		"siu":{}
 	}`
 	);
 
 	sh.mkdir(packagesRoot);
+	sh.mkdir(path.resolve(packagesRoot, "test"));
 
 	done();
 });
@@ -84,6 +88,66 @@ test(" create package ", async done => {
 
 	expect(meta.dependencies).toHaveProperty("test2");
 	expect(meta.dependencies.test2).toBe("file:../test2");
+
+	done();
+});
+
+test(" build.start ", async done => {
+	const ctx = await testPlugin("build", "start", "test");
+
+	expect(!!ctx.scopedKeys("startTime")).toBe(true);
+
+	done();
+});
+
+test(" build.complete ", async done => {
+	const spy = jest.spyOn(console, "log").mockImplementation();
+
+	await testPlugin("build", "complete", "test");
+
+	expect(spy).toHaveBeenCalledTimes(1);
+
+	spy.mockRestore();
+
+	done();
+});
+
+test(" build.process ", async done => {
+	const pkgRoot = path.resolve(packagesRoot, "test");
+
+	sh.mkdir(path.resolve(pkgRoot, "lib"));
+	fs.writeFileSync(path.resolve(pkgRoot, "lib/index.ts"), `export const a = "a";`);
+
+	await testPlugin("build", "process", "test");
+
+	await testPlugin("build", "error");
+
+	await testPlugin("build", "clean", "test");
+
+	const outputFileUmd = path.resolve(pkgRoot, "dist/test.js");
+	const outputFileES = path.resolve(pkgRoot, "dist/test.mjs");
+	const outputFileCJS = path.resolve(pkgRoot, "dist/test.cjs");
+	expect(fs.existsSync(outputFileUmd)).toBe(true);
+	expect(fs.existsSync(outputFileES)).toBe(true);
+	expect(fs.existsSync(outputFileCJS)).toBe(true);
+
+	expect(fs.readFileSync(outputFileES).toString()).toBe(`const a = "a";
+
+export { a };
+`);
+	expect(fs.readFileSync(outputFileCJS).toString()).toBe(`'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+const a = "a";
+
+exports.a = a;
+`);
+
+	const umdStr = fs.readFileSync(outputFileUmd).toString();
+
+	expect(!!~umdStr.indexOf("(function (global, factory) {")).toBe(true);
+	expect(!!~umdStr.indexOf("global.Test = {}")).toBe(true);
 
 	done();
 });
