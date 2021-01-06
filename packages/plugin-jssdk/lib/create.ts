@@ -63,6 +63,7 @@ export async function onCreationProc(ctx: HookHandlerContext) {
 
 	ctx.scopedKeys<any>("spinner").stop(true);
 
+	/* istanbul ignore if */
 	if (ctx.opts<boolean>("install")) {
 		shell.exec("yarn");
 	}
