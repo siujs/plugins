@@ -36,9 +36,9 @@
 	},
 	"dependencies": {
 		"@rollup/plugin-babel": "^5.2.2",
-		"@siujs/builtin-build": "^1.0.0-beta.6",
-		"@siujs/core": "^1.0.0-beta.6",
-		"@siujs/utils": "^1.0.0-beta.6",
+		"@siujs/builtin-build": "^1.0.0-beta.7",
+		"@siujs/core": "^1.0.0-beta.7",
+		"@siujs/utils": "^1.0.0-beta.7",
 		"chalk": "^4.1.0",
 		"fs-extra": "^9.0.1",
 		"pretty-ms": "^7.0.1",
