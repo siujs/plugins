@@ -47,8 +47,6 @@ export default (api: PluginApi) => {
 				);
 			},
 			async onConfigTransform(config: Config, format: TOutputFormatKey) {
-				if (format !== "es") return;
-
 				const sourceESDirFiles = glob.sync("**/*.ts", { cwd: sourceESDirPath }).reduce((prev, cur) => {
 					prev[cur.replace(".ts", "")] = path.resolve(sourceESDirPath, cur);
 					return prev;
@@ -63,11 +61,18 @@ export default (api: PluginApi) => {
 					.delete("file")
 					.end()
 					.plugin("esbuild")
-					.use(asRollupPlugin());
+					.use(asRollupPlugin(), [{ format: "esm" }]);
+
+				config.treeshake({
+					moduleSideEffects: true
+				});
 
 				if (customTransform) {
 					await customTransform(config, format);
 				}
+			},
+			async onBuildError(ex) {
+				throw ex;
 			}
 		});
 
