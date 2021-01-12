@@ -39,7 +39,7 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 
 			config.plugin("esbuild").use(asRollupPlugin());
 
-			config.plugin("babel").use(require("@rollup/plugin-babel"), [
+			config.plugin("babel").use(require("@rollup/plugin-babel").default, [
 				{
 					extensions: [".mjs", ".cjs", ".js", ".es", ".es6"],
 					include: ["packages/**/*"],
