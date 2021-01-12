@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const fs = require("fs");
 
@@ -17,7 +16,7 @@ const moduleNameMapper = fs
 		return prev;
 	}, {});
 
-const utMdus = (process.env.UT_MDU || "*").split(",").map(it => "plugin-" + it);
+const utMdus = (process.env.UT_MDU || "*").split(",");
 
 module.exports = {
 	rootDir,
@@ -27,6 +26,6 @@ module.exports = {
 		"^.+\\.(ts|tsx)$": "ts-jest"
 	},
 	coverageDirectory: path.resolve(rootDir, "./coverage"),
-	coverageReporters: ["html"],
+	collectCoverage: true,
 	testMatch: utMdus.map(mdu => `<rootDir>/packages/${mdu}/__tests__/**/*.(test|spec).(ts|js)`)
 };
