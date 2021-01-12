@@ -15,7 +15,12 @@ const packagesRoot = path.resolve(__dirname, "./packages");
 
 jest.mock("console");
 
+let backup: string;
+
 beforeAll(async done => {
+	backup = process.env.NODE_ENV;
+
+	process.env.NODE_ENV = "SIU_TEST";
 	siuPluginCore = await loadPlugins(fallbackApi);
 
 	process.chdir(__dirname);
@@ -32,6 +37,10 @@ beforeAll(async done => {
 	sh.mkdir(path.resolve(packagesRoot, "test"));
 
 	done();
+});
+
+afterAll(() => {
+	process.env.NODE_ENV = backup;
 });
 
 test(" cli options ", async done => {
