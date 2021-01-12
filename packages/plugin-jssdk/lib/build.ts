@@ -31,9 +31,7 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 			config.plugin("esbuild").use(asRollupPlugin());
 
 			// eslint-disable-next-line @typescript-eslint/no-var-requires
-			const babelPlugin = require("@rollup/plugin-babel");
-
-			config.plugin("babel").use(babelPlugin.default || babelPlugin, [
+			config.plugin("babel").use(require("@rollup/plugin-babel").default, [
 				{
 					extensions: [".mjs", ".cjs", ".js", ".es", ".es6"],
 					include: ["packages/**/*"],

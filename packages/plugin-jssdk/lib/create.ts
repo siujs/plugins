@@ -47,8 +47,9 @@ export async function onCreationProc(ctx: HookHandlerContext) {
 			const pkgMeta = await fs.readJSON(pkgData.metaPath);
 
 			if (pkgMeta) {
+				pkgMeta.dependencies = pkgMeta.dependencies || /* istanbul ignore next */ {};
 				depsArr.forEach(dep => {
-					(pkgMeta.dependencies || (pkgMeta.dependencies = {}))[dep] = `file:../${dep}`;
+					pkgMeta.dependencies[dep] = `file:../${dep}`;
 				});
 
 				await Promise.all([
