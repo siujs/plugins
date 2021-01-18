@@ -1,6 +1,6 @@
 {
 	"name": "@siujs/plugin-jssdk",
-	"version": "0.0.1",
+	"version": "0.0.0",
 	"description": "siujs plugin for `jssdk` project",
 	"keywords": [
 		"js",

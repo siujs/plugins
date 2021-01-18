@@ -1,6 +1,6 @@
 {
 	"name": "@siujs/plugin-build-es",
-	"version": "0.0.1",
+	"version": "0.0.0",
 	"description": "Support tree-shaking es package, optimize package size",
 	"keywords": [
 		"es",
