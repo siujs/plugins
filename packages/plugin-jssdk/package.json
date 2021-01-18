@@ -1,51 +1,51 @@
 {
-	"name": "@siujs/plugin-jssdk",
-	"version": "0.0.0",
-	"description": "siujs plugin for `jssdk` project",
-	"keywords": [
-		"js",
-		"sdk",
-		"jssdk",
-		"siu",
-		"siujs",
-		"plugin"
-	],
-	"author": "buns <kuafujs@126.com>",
-	"homepage": "https://github.com/siujs/plugins",
-	"license": "MIT",
-	"main": "dist/index.cjs",
-	"module": "dist/index.mjs",
-	"directories": {
-		"lib": "lib",
-		"test": "__tests__"
-	},
-	"files": [
-		"dist"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/siujs/plugins.git"
-	},
-	"bugs": {
-		"url": "https://github.com/siujs/plugins/issues"
-	},
-	"peerDependencies": {
-		"@siujs/builtin-build": "1.0.0-beta.10",
-		"@siujs/core": "1.0.0-beta.10",
-		"@siujs/utils": "1.0.0-beta.10"
-	},
-	"dependencies": {
-		"@rollup/plugin-babel": "^5.2.2",
-		"@siujs/builtin-build": "1.0.0-beta.10",
-		"@siujs/core": "1.0.0-beta.10",
-		"@siujs/utils": "1.0.0-beta.10",
-		"chalk": "^4.1.0",
-		"fs-extra": "^9.0.1",
-		"pretty-ms": "^7.0.1",
-		"shelljs": "^0.8.4"
-	},
-	"devDependencies": {
-		"@types/fs-extra": "^9.0.6",
-		"@types/shelljs": "^0.8.8"
-	}
+  "name": "@siujs/plugin-jssdk",
+  "version": "0.0.1",
+  "description": "siujs plugin for `jssdk` project",
+  "keywords": [
+    "js",
+    "sdk",
+    "jssdk",
+    "siu",
+    "siujs",
+    "plugin"
+  ],
+  "author": "buns <kuafujs@126.com>",
+  "homepage": "https://github.com/siujs/plugins",
+  "license": "MIT",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siujs/plugins.git"
+  },
+  "bugs": {
+    "url": "https://github.com/siujs/plugins/issues"
+  },
+  "peerDependencies": {
+    "@siujs/builtin-build": "1.0.0-beta.10",
+    "@siujs/core": "1.0.0-beta.10",
+    "@siujs/utils": "1.0.0-beta.10"
+  },
+  "dependencies": {
+    "@rollup/plugin-babel": "^5.2.2",
+    "@siujs/builtin-build": "1.0.0-beta.10",
+    "@siujs/core": "1.0.0-beta.10",
+    "@siujs/utils": "1.0.0-beta.10",
+    "chalk": "^4.1.0",
+    "fs-extra": "^9.0.1",
+    "pretty-ms": "^7.0.1",
+    "shelljs": "^0.8.4"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.6",
+    "@types/shelljs": "^0.8.8"
+  }
 }
