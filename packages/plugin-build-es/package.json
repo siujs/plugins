@@ -28,12 +28,12 @@
 		"url": "https://github.com/siujs/plugins/issues"
 	},
 	"peerDependencies": {
-		"@siujs/core": "1.0.0-beta.8",
-		"@siujs/builtin-build": "1.0.0-beta.8"
+		"@siujs/core": "1.0.0-beta.10",
+		"@siujs/builtin-build": "1.0.0-beta.10"
 	},
 	"dependencies": {
-		"@siujs/core": "1.0.0-beta.8",
-		"@siujs/builtin-build": "1.0.0-beta.8",
+		"@siujs/core": "1.0.0-beta.10",
+		"@siujs/builtin-build": "1.0.0-beta.10",
 		"chalk": "^4.1.0",
 		"fs-extra": "^9.0.1",
 		"glob": "^7.1.6",
