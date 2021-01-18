@@ -34,7 +34,7 @@ export async function onCreationProc(ctx: HookHandlerContext) {
 	 */
 	await new Promise((resolve, reject) => {
 		shell.exec(`yarn pretty`, { silent: true, cwd: pkgData.path }, (code, stdout, stderr) => {
-			code === 0 ? resolve(true) : reject(stderr);
+			code === 0 ? resolve(true) : /* istanbul ignore next */ reject(stderr);
 		});
 	});
 
@@ -80,6 +80,7 @@ export async function onCreationComplete(ctx: HookHandlerContext) {
 	);
 }
 
+/* istanbul ignore next */
 export async function onCreationError(ctx: HookHandlerContext) {
 	ctx.scopedKeys<any>("spinner")?.stop(true);
 	shell.rm("-rf", ctx.pkg().path);

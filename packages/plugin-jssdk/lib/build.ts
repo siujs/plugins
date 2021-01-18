@@ -48,6 +48,7 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 				await customTransform(config, format);
 			}
 		},
+		/* istanbul ignore next */
 		onBuildError(ex: Error) {
 			throw ex;
 		}

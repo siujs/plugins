@@ -71,6 +71,7 @@ export default (api: PluginApi) => {
 					await customTransform(config, format);
 				}
 			},
+			/* istanbul ignore next */
 			async onBuildError(ex) {
 				throw ex;
 			}
@@ -86,7 +87,7 @@ export default (api: PluginApi) => {
 		console.log(
 			chalk.green(
 				`\n✔ Builded ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(
-					ms(Date.now() - ctx.scopedKeys<number>("startTime"))
+					ms(Date.now() - (ctx.scopedKeys<number>("startTime") || 0))
 				)}!`
 			)
 		);
