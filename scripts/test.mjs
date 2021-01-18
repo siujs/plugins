@@ -12,7 +12,7 @@ if (process.argv.length >= 2) {
 			? "*"
 			: mdus
 					.split(",")
-					.filter(p => pkgDirs.includes("plugin-" + p))
+					.filter(p => pkgDirs.includes(p.startsWith("plugin-") ? p : `plugin-${p}`))
 					.join(",")
 					.replace(/^\s*|\s*$/, "");
 }
