@@ -4,10 +4,16 @@ import glob from "glob";
 import path from "path";
 import ms from "pretty-ms";
 
-import { asRollupPlugin, Config, SiuRollupBuilder, stopService, TOutputFormatKey } from "@siujs/builtin-build";
+import {
+	esbuildRollupPlugin,
+	SiuRollupBuilder,
+	SiuRollupConfig,
+	stopService,
+	TOutputFormatKey
+} from "@siujs/builtin-build";
 import { CLIOptionHandlerParams, HookHandlerContext, PluginApi } from "@siujs/core";
 
-type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | Promise<void>;
+type TransformConfigHook = (config: SiuRollupConfig, format: TOutputFormatKey) => void | Promise<void>;
 
 export default (api: PluginApi) => {
 	api.build.cli((option: CLIOptionHandlerParams) => {
@@ -33,7 +39,7 @@ export default (api: PluginApi) => {
 		const customTransform = ctx.opts<TransformConfigHook>("transformConfig");
 
 		const bablePluginImportBuilder = new SiuRollupBuilder(pkgData, {
-			onEachBuildStart(config: Config) {
+			onEachBuildStart(config: SiuRollupConfig) {
 				const outputs = config.toOutput();
 
 				const input = sourceESDirPath + "/**/*.ts";
@@ -46,7 +52,7 @@ export default (api: PluginApi) => {
 					)
 				);
 			},
-			async onConfigTransform(config: Config, format: TOutputFormatKey) {
+			async onConfigTransform(config: SiuRollupConfig, format: TOutputFormatKey) {
 				const sourceESDirFiles = glob.sync("**/*.ts", { cwd: sourceESDirPath }).reduce((prev, cur) => {
 					prev[cur.replace(".ts", "")] = path.resolve(sourceESDirPath, cur);
 					return prev;
@@ -61,7 +67,7 @@ export default (api: PluginApi) => {
 					.delete("file")
 					.end()
 					.plugin("esbuild")
-					.use(asRollupPlugin(), [{ format: "esm" }]);
+					.use(esbuildRollupPlugin(), [{ format: "esm" }]);
 
 				config.treeshake({
 					moduleSideEffects: true

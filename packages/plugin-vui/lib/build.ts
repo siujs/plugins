@@ -5,10 +5,10 @@ import path from "path";
 import ms from "pretty-ms";
 
 import {
-	asRollupPlugin,
-	Config,
+	esbuildRollupPlugin,
 	generateDTSWithTSC,
 	SiuRollupBuilder,
+	SiuRollupConfig,
 	stopService,
 	TOutputFormatKey
 } from "@siujs/builtin-build";
@@ -16,7 +16,7 @@ import { HookHandlerContext } from "@siujs/core";
 
 import { PostCSSOptions, vueOptions } from "./const";
 
-type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | Promise<void>;
+type TransformConfigHook = (config: SiuRollupConfig, format: TOutputFormatKey) => void | Promise<void>;
 
 export async function onBuildStart(ctx: HookHandlerContext) {
 	ctx.scopedKeys("startTime", Date.now());
@@ -32,12 +32,12 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 	const isLibPkg = pkgData.meta?.["siu:vui:lib"];
 
 	const builder = new SiuRollupBuilder(pkgData, {
-		async onConfigTransform(config: Config, format: TOutputFormatKey) {
+		async onConfigTransform(config: SiuRollupConfig, format: TOutputFormatKey) {
 			config.external.add("vue");
 
 			config.output(format).globals.set("vue", "Vue");
 
-			config.plugin("esbuild").use(asRollupPlugin());
+			config.plugin("esbuild").use(esbuildRollupPlugin());
 
 			config.plugin("babel").use(require("@rollup/plugin-babel").default, [
 				{

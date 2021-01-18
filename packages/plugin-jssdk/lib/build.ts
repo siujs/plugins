@@ -4,16 +4,16 @@ import path from "path";
 import ms from "pretty-ms";
 
 import {
-	asRollupPlugin,
-	Config,
+	esbuildRollupPlugin,
 	generateDTSWithTSC,
 	SiuRollupBuilder,
+	SiuRollupConfig,
 	stopService,
 	TOutputFormatKey
 } from "@siujs/builtin-build";
 import { HookHandlerContext } from "@siujs/core";
 
-type TransformConfigHook = (config: Config, format: TOutputFormatKey) => void | Promise<void>;
+type TransformConfigHook = (config: SiuRollupConfig, format: TOutputFormatKey) => void | Promise<void>;
 
 export async function onBuildStart(ctx: HookHandlerContext) {
 	ctx.scopedKeys("startTime", Date.now());
@@ -27,8 +27,8 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 	const pkgData = ctx.pkg();
 
 	const builder = new SiuRollupBuilder(pkgData, {
-		async onConfigTransform(config: Config, format: TOutputFormatKey) {
-			config.plugin("esbuild").use(asRollupPlugin());
+		async onConfigTransform(config: SiuRollupConfig, format: TOutputFormatKey) {
+			config.plugin("esbuild").use(esbuildRollupPlugin());
 
 			// eslint-disable-next-line @typescript-eslint/no-var-requires
 			config.plugin("babel").use(require("@rollup/plugin-babel").default, [
