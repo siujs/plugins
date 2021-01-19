@@ -9,7 +9,7 @@ import {
 	generateDTSWithTSC,
 	SiuRollupBuilder,
 	SiuRollupConfig,
-	stopService,
+	stopEsBuildService,
 	TOutputFormatKey
 } from "@siujs/builtin-build";
 import { HookHandlerContext } from "@siujs/core";
@@ -128,7 +128,7 @@ export async function onBuildClean(ctx: HookHandlerContext) {
 	 *
 	 *  note: 放在clean周期而不是放在buildComplete或者Builder.finished这几个地方主要是为了当前项目全程保持esbuild service进程一直存在,可以缩短项目编译时间
 	 */
-	stopService();
+	stopEsBuildService();
 
 	const pkgData = ctx.pkg();
 

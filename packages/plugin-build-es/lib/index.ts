@@ -8,7 +8,7 @@ import {
 	esbuildRollupPlugin,
 	SiuRollupBuilder,
 	SiuRollupConfig,
-	stopService,
+	stopEsBuildService,
 	TOutputFormatKey
 } from "@siujs/builtin-build";
 import { CLIOptionHandlerParams, HookHandlerContext, PluginApi } from "@siujs/core";
@@ -104,6 +104,6 @@ export default (api: PluginApi) => {
 	});
 
 	api.build.clean(() => {
-		stopService();
+		stopEsBuildService();
 	});
 };
