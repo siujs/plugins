@@ -35,6 +35,12 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 				{
 					extensions: [".mjs", ".cjs", ".js", ".es", ".es6"],
 					include: ["packages/**/*"],
+					/**
+					 * babelHelpers: 'bundled' option was used by default.
+					 * It is recommended to configure this option explicitly,
+					 * read more here: https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers
+					 */
+					babelHelpers: "bundled",
 					// 自动读取目标项目的.babelrc文件配置
 					root: pkgData.root
 				}
