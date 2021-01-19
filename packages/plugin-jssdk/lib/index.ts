@@ -15,6 +15,7 @@ export default (api: PluginApi) => {
 
 	api.build.cli((option: CLIOptionHandlerParams) => {
 		option("-D, --no-dts", "Whether not build defineTypes file");
+		option("-G, --no-gitee", "Whether not use gitee template-url", false);
 	});
 
 	api.build.start(onBuildStart);

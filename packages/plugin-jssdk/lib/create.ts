@@ -16,7 +16,9 @@ export async function onCreationStart(ctx: HookHandlerContext) {
 export async function onCreationProc(ctx: HookHandlerContext) {
 	const pkgData = ctx.pkg();
 
-	await downloadGit("https://gitee.com/siujs/tpls", "jssdk.pkg", pkgData.path);
+	const useGitee = ctx.opts<boolean>("gitee");
+
+	await downloadGit(`https://${useGitee ? "gitee" : "github"}.com/siujs/tpls`, "jssdk.pkg", pkgData.path);
 
 	/**
 	 * replace placeholder chars
