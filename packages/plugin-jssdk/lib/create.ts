@@ -5,7 +5,7 @@ import ms from "pretty-ms";
 import shell from "shelljs";
 
 import { HookHandlerContext } from "@siujs/core";
-import { downloadGit, startSpinner } from "@siujs/utils";
+import { downloadGit, exec, startSpinner } from "@siujs/utils";
 
 export async function onCreationStart(ctx: HookHandlerContext) {
 	ctx.scopedKeys("startTime", Date.now());
@@ -27,15 +27,6 @@ export async function onCreationProc(ctx: HookHandlerContext) {
 		shell.sed("-i", /__SIU_PKG_UMDNAME__/, pkgData.umdName, filePath);
 		shell.sed("-i", /__SIU_PKG_DIRNAME__/, pkgData.dirName, filePath);
 		shell.sed("-i", /__SIU_PKG_NAME__/, pkgData.name, filePath);
-	});
-
-	/**
-	 * pretty files in current workspace
-	 */
-	await new Promise((resolve, reject) => {
-		shell.exec(`yarn pretty`, { silent: true, cwd: pkgData.path }, (code, stdout, stderr) => {
-			code === 0 ? resolve(true) : /* istanbul ignore next */ reject(stderr);
-		});
 	});
 
 	const deps = ctx.opts<string>("deps");
@@ -66,8 +57,12 @@ export async function onCreationProc(ctx: HookHandlerContext) {
 
 	/* istanbul ignore if */
 	if (ctx.opts<boolean>("install")) {
-		shell.exec("yarn");
+		await exec("yarn", { cwd: pkgData.path });
 	}
+
+	await exec("npm", ["run", "pretty"], { cwd: pkgData.path }).catch(ex => {
+		console.log(chalk.redBright("[plugin-jssdk:pretty] ERROR:", ex));
+	});
 }
 
 export async function onCreationComplete(ctx: HookHandlerContext) {
@@ -83,6 +78,6 @@ export async function onCreationComplete(ctx: HookHandlerContext) {
 /* istanbul ignore next */
 export async function onCreationError(ctx: HookHandlerContext) {
 	ctx.scopedKeys<any>("spinner")?.stop(true);
-	shell.rm("-rf", ctx.pkg().path);
 	console.log(chalk.redBright(ctx.ex()));
+	shell.rm("-rf", ctx.pkg().path);
 }
