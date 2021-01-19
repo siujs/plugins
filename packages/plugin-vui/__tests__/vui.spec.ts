@@ -1,5 +1,4 @@
 import { Option } from "commander";
-import fs from "fs";
 import path from "path";
 import sh from "shelljs";
 
@@ -10,23 +9,26 @@ import fallbackApi from "../lib/index";
 type PromiseResolvedResult<T> = T extends (...args: any[]) => Promise<infer P> ? P : never;
 
 let siuPluginCore: PromiseResolvedResult<typeof loadPlugins>;
-const packagesRoot = path.resolve(__dirname, "./packages");
+
+const packagesRoot = path.resolve(process.cwd(), "packages");
 
 beforeAll(async done => {
 	siuPluginCore = await loadPlugins(fallbackApi);
 
-	process.chdir(__dirname);
-
-	fs.writeFileSync(
-		path.resolve(__dirname, "package.json"),
-		`{
-		"name": "vui.spec"
-	}`
-	);
-
-	sh.mkdir(packagesRoot);
+	// await siuPluginCore
+	// 	.applyPlugins("create", {
+	// 		install: false,
+	// 		pkg: "vui"
+	// 	})
+	// 	.catch(ex => {
+	// 		console.log(ex);
+	// 	});
 
 	done();
+});
+
+afterAll(() => {
+	sh.rm("-rf", path.resolve(packagesRoot, "vui"));
 });
 
 test(" cli options ", async done => {
@@ -50,10 +52,4 @@ test(" cli options ", async done => {
 	expect(options[0].short).toBe("-I");
 
 	done();
-});
-
-afterAll(() => {
-	fs.unlinkSync(path.resolve(__dirname, "package.json"));
-
-	sh.rm("-rf", packagesRoot);
 });

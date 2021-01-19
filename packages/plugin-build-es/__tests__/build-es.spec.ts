@@ -11,19 +11,18 @@ type PromiseResolvedResult<T> = T extends (...args: any[]) => Promise<infer P> ?
 
 let siuPluginCore: PromiseResolvedResult<typeof loadPlugins>;
 
-const packagesRoot = path.resolve(__dirname, "./packages");
-
 jest.mock("console");
 
-let backup: string;
+let packagesRoot: string, backup: string;
 
 beforeAll(async done => {
-	backup = process.env.NODE_ENV;
+	packagesRoot = path.resolve(__dirname, "./packages");
 
-	process.env.NODE_ENV = "SIU_TEST";
-	siuPluginCore = await loadPlugins(fallbackApi);
+	backup = process.cwd();
 
 	process.chdir(__dirname);
+
+	siuPluginCore = await loadPlugins(fallbackApi);
 
 	fs.writeFileSync(
 		path.resolve(__dirname, "package.json"),
@@ -40,7 +39,9 @@ beforeAll(async done => {
 });
 
 afterAll(() => {
-	process.env.NODE_ENV = backup;
+	process.chdir(backup);
+	fs.unlinkSync(path.resolve(__dirname, "package.json"));
+	sh.rm("-rf", packagesRoot);
 });
 
 test(" cli options ", async done => {
@@ -82,7 +83,7 @@ test(" build.process ", async done => {
 
 	fs.writeFileSync(
 		path.resolve(pkgRoot, "lib/index.ts"),
-		`import {a} from "../lib2"; 
+		`import {a} from "../lib2";
 	export const c = "a"+a;
 	`
 	);
@@ -125,9 +126,4 @@ test(" build.complete ", async done => {
 	spy.mockRestore();
 
 	done();
-});
-
-afterAll(() => {
-	fs.unlinkSync(path.resolve(__dirname, "package.json"));
-	sh.rm("-rf", packagesRoot);
 });
