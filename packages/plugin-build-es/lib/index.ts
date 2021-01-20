@@ -22,7 +22,7 @@ export default (api: PluginApi) => {
 	});
 
 	api.build.start(async (ctx: HookHandlerContext) => {
-		const destDir = ctx.opts<string>("destDir") || "es";
+		const destDir = ctx.opts<string>("destDir", "es");
 
 		ctx.scopedKeys("startTime", Date.now());
 
@@ -32,9 +32,9 @@ export default (api: PluginApi) => {
 	api.build.process(async (ctx: HookHandlerContext) => {
 		const pkgData = ctx.pkg();
 
-		const sourceESDirPath = path.resolve(pkgData.path, ctx.opts<string>("sourceDir") || "lib");
+		const sourceESDirPath = path.resolve(pkgData.path, ctx.opts<string>("sourceDir", "lib"));
 
-		const destESDir = path.resolve(pkgData.path, ctx.opts<string>("destDir") || "es");
+		const destESDir = path.resolve(pkgData.path, ctx.opts<string>("destDir", "es"));
 
 		const customTransform = ctx.opts<TransformConfigHook>("transformConfig");
 

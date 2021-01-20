@@ -95,7 +95,7 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 		}
 	});
 
-	const format = (ctx.opts<string>("format") || "es,cjs,umd,umd-min").split(",") as TOutputFormatKey[];
+	const format = ctx.opts<string>("format", "es,cjs,umd,umd-min").split(",") as TOutputFormatKey[];
 
 	const customFormats = (pkgData.meta?.buildFormats ?? []) as TOutputFormatKey[];
 
