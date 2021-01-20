@@ -80,6 +80,5 @@ export async function onCreationComplete(ctx: HookHandlerContext) {
 /* istanbul ignore next */
 export async function onCreationError(ctx: HookHandlerContext) {
 	ctx.scopedKeys<any>("spinner")?.stop(true);
-	console.log(chalk.redBright(ctx.ex()));
 	shell.rm("-rf", ctx.pkg().path);
 }
