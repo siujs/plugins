@@ -90,17 +90,14 @@ export default (api: PluginApi) => {
 	});
 
 	api.build.complete((ctx: HookHandlerContext) => {
+		console.log();
 		console.log(
 			chalk.green(
-				`\n✔ Builded ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(
+				`✔ Builded ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(
 					ms(Date.now() - (ctx.scopedKeys<number>("startTime") || 0))
 				)}!`
 			)
 		);
-	});
-
-	api.build.error((ctx: HookHandlerContext) => {
-		console.log(chalk.redBright(ctx.ex()));
 	});
 
 	api.build.clean(() => {
