@@ -1,5 +1,19 @@
 # @siujs/plugin-jssdk ChangeLog
 
+## [v0.0.3](https://github.com/siujs/plugins/compare/jssdk-v0.0.2...v0.0.3) (2021-01-20)
+
+### Code Refactoring
+
+- use ctx.opts('xxx',defaultValue) ([cb122a1](https://github.com/siujs/plugins/commit/cb122a10a852e06685388cdf34c792149eea493b))
+
+### Features
+
+- support to customize `buildFormats` ([910bdfb](https://github.com/siujs/plugins/commit/910bdfbd92f1787b7c7f0f27effc4ff3f7cfce68))
+
+### Performance Improvements
+
+- enhance 'create' and 'build' ([244a209](https://github.com/siujs/plugins/commit/244a20943dead850ba9f60500d86b41cae34fdfc))
+
 ## [v0.0.2](https://github.com/siujs/plugins/compare/74492aaef296c7620003487cc3ec0d7693a6adde...v0.0.2) (2021-01-19)
 
 ### Code Refactoring
