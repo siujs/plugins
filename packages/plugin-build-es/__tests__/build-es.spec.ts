@@ -116,12 +116,12 @@ export { c };
 	done();
 });
 
-test(" build.complete ", async done => {
+it("should call 'console.log' 2 times when call 'build complete' ", async done => {
 	const spy = jest.spyOn(console, "log").mockImplementation();
 
 	await testPlugin("build", "complete", "test");
 
-	expect(spy).toHaveBeenCalledTimes(1);
+	expect(spy).toHaveBeenCalledTimes(2);
 
 	spy.mockRestore();
 
