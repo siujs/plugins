@@ -95,13 +95,13 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 		}
 	});
 
-	const format = ctx.opts<string>("format");
+	const format = (ctx.opts<string>("format") || "es,cjs,umd,umd-min").split(",") as TOutputFormatKey[];
 
-	await builder.build(
-		format && {
-			allowFormats: format.split(",") as TOutputFormatKey[]
-		}
-	);
+	const customFormats = (pkgData.meta?.buildFormats ?? []) as TOutputFormatKey[];
+
+	await builder.build({
+		allowFormats: customFormats.length ? customFormats.filter(x => format.includes(x)) : format
+	});
 
 	console.log();
 
