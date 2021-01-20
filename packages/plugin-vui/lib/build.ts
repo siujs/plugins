@@ -109,17 +109,12 @@ export async function onBuildProc(ctx: HookHandlerContext) {
 }
 
 export async function onBuildComplete(ctx: HookHandlerContext) {
+	console.log();
 	console.log(
 		chalk.green(
-			`\n✔ Builded ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(
-				ms(Date.now() - ctx.scopedKeys<number>("startTime"))
-			)}!`
+			`✔ Builded ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(ms(Date.now() - ctx.scopedKeys<number>("startTime")))}!`
 		)
 	);
-}
-
-export async function onBuildError(ctx: HookHandlerContext) {
-	console.log(chalk.redBright(ctx.ex()));
 }
 
 export async function onBuildClean(ctx: HookHandlerContext) {

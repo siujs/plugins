@@ -85,17 +85,15 @@ export async function onCreateProc(ctx: HookHandlerContext) {
 }
 
 export async function onCreateComplete(ctx: HookHandlerContext) {
+	console.log();
 	console.log(
 		chalk.green(
-			`\n✔ Created ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(
-				ms(Date.now() - ctx.scopedKeys<number>("startTime"))
-			)}!`
+			`✔ Created ${chalk.bold(ctx.pkg().name)} in ${chalk.bold(ms(Date.now() - ctx.scopedKeys<number>("startTime")))}!`
 		)
 	);
 }
 
 export async function onCreateError(ctx: HookHandlerContext) {
 	ctx.scopedKeys<any>("spinner").stop(true);
-	console.log(chalk.redBright(ctx.ex()));
 	shell.rm("-rf", ctx.pkg().path);
 }

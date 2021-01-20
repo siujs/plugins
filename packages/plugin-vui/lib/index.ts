@@ -1,6 +1,6 @@
 import { CLIOptionHandlerParams, PluginApi } from "@siujs/core";
 
-import { onBuildClean, onBuildComplete, onBuildError, onBuildProc, onBuildStart } from "./build";
+import { onBuildClean, onBuildComplete, onBuildProc, onBuildStart } from "./build";
 import { onCreateComplete, onCreateError, onCreateProc, onCreateStart } from "./create";
 import { onDocGenerationComplete, onDocGenerationError, onDocGenerationProc, onDocGenerationStart } from "./doc";
 
@@ -29,7 +29,6 @@ export default (api: PluginApi) => {
 	api.build.start(onBuildStart);
 	api.build.process(onBuildProc);
 	api.build.complete(onBuildComplete);
-	api.build.error(onBuildError);
 	api.build.clean(onBuildClean);
 
 	api.doc.start(onDocGenerationStart);
